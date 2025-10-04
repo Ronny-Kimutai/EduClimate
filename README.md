@@ -1,5 +1,5 @@
 <<<<<<< HEAD
-# Climate-learning
+# EduClimate
 =======
 # React + Vite
 
