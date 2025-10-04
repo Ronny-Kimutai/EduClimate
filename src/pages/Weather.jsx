@@ -4,103 +4,101 @@ export default function Weather({ user }) {
   if (!user) {
     return (
       <div className="p-6">
-        <h2 className="text-xl font-bold mb-4">🌦️ Weather Updates</h2>
-        <p>Please set up your profile first.</p>
-        <Link to="/" className="text-green-600 underline">Go to Profile</Link>
+        <h2 className="text-xl font-bold mb-4">🌦️ Taarifa za Hali ya Hewa</h2>
+        <p>Tafadhali weka profaili yako kwanza.</p>
+        <Link to="/" className="text-green-600 underline">Nenda kwenye Profaili</Link>
       </div>
     );
   }
 
   const { name, location, language, learningStyle } = user;
 
-  // Local weather messages (mock data for demo)
+  // Local weather messages (Narok only, with Kiswahili + Maa)
   const weatherData = {
-     Narok: {
-    text: "Light rains expected next week. Prepare for planting.",
-    story: "Narok farmers say: 'When the acacia flowers, rains will soon follow.'",
-    quiz: {
-      question: "What should farmers do before expected rains?",
-      options: ["Prepare land", "Do nothing", "Harvest maize"],
-      answer: "Prepare land"
+    Narok: {
+      Kiswahili: {
+        text: "Mvua za kawaida zinaweza kunyesha wiki ijayo. Jiandae kwa kupanda.",
+        story: "Wakulima wa Narok husema: 'Ukua akacia maua, mvua zitakuja hivi karibuni.'",
+        quiz: {
+          question: "Wakulima wanapaswa kufanya nini kabla ya mvua inayotarajiwa?",
+          options: ["Tayarisha shamba", "Usifanye chochote", "Chuma mahindi"],
+          answer: "Tayarisha shamba"
+        }
+      },
+      Maa: {
+        text: "Emunyata olomei enkiteng'ani. Enkai aito he entoki.",
+        story: "Narok enkishu: 'Isha olmarashai — enki iltung'ani.'",
+        quiz: {
+          question: "Amu olme emunyata?",
+          options: ["Etoin olokol", "Awik eitu", "Neti"],
+          answer: "Etoin olokol"
+        }
+      }
     }
-  },
-  Turkana: {
-    text: "Dry and hot conditions. Conserve water.",
-    story: "Turkana herders: 'The dry wind warns us – move the herds to riverbeds.'",
-    quiz: {
-      question: "What is most important during a hot dry spell?",
-      options: ["Store water", "Sell cattle", "Burn pasture"],
-      answer: "Store water"
-    }
-  },
-  Kitui: {
-    text: "Scattered showers possible, good for cassava and millet.",
-    story: "In Kitui, when clouds gather in the east, rains often bless the fields.",
-    quiz: {
-      question: "Which crop thrives with scattered rains?",
-      options: ["Cassava", "Wheat", "Rice"],
-      answer: "Cassava"
-    }
-  }
   };
 
   const translations = {
     Kiswahili: {
-      greeting: `Habari ${name || "rafiki"} wa ${location}!`,
+      greeting: `Habari ${name || "rafiki"} wa ${location || "Narok"}!`,
       back: "← Rudi kwenye Menyu"
     },
     Maa: {
-      greeting: `Supa ${name || "enkai"} oo ${location}!`,
+      greeting: `Supa ${name || "enkai"} oo ${location || "Narok"}!`,
       back: "← Aing'u Menu"
-    },
-    English: {
-      greeting: `Hello ${name || "friend"} from ${location}!`,
-      back: "← Back to Menu"
     }
   };
 
+  // safe derived values: prefer provided language/location, otherwise fallback
+  const t = translations[language] || translations['Kiswahili'];
+  const loc = location || 'Narok';
+  const style = learningStyle || 'text';
+  const langKey = language === 'Maa' ? 'Maa' : 'Kiswahili';
+
   return (
-  <div className="p-6">
-    <h2 className="text-xl font-bold mb-4">⛅ Weather Updates</h2>
-    <p className="mb-4">{translations[language].greeting}</p>
+    <div style={{maxWidth:720}}>
+      <div className="card">
+  <h2 className="text-xl mb-2">☁️ Taarifa za Hali ya Hewa</h2>
+  <p className="mb-4">{t.greeting.replace(location || 'Narok', loc)}</p>
 
-    <div className="mb-4 p-4 border rounded bg-blue-50">
-      {learningStyle === "text" && (
-        <p>📖 {weatherData[location].text}</p>
-      )}
+        <div className="mb-4 card bg-blue-50" style={{padding:12}}>
+          {style === "text" && (
+            <p>📖 {weatherData[loc][langKey].text}</p>
+          )}
 
-      {learningStyle === "story" && (
-        <p className="italic">📜 {weatherData[location].story}</p>
-      )}
+          {style === "story" && (
+            <p className="italic">📜 {weatherData[loc][langKey].story}</p>
+          )}
 
-      {learningStyle === "quiz" && (
-        <div>
-          <p>🎮 {weatherData[location].quiz.question}</p>
-          <div className="flex gap-2 mt-2">
-            {weatherData[location].quiz.options.map((opt, i) => (
-              <button
-                key={i}
-                onClick={() =>
-                  alert(
-                    opt === weatherData[location].quiz.answer
-                      ? "✅ Correct!"
-                      : "❌ Try again"
-                  )
-                }
-                className="px-3 py-1 bg-blue-200 rounded hover:bg-blue-400"
-              >
-                {opt}
-              </button>
-            ))}
-          </div>
+          {style === "quiz" && (
+            <div>
+              <p>🎮 {weatherData[loc][langKey].quiz.question}</p>
+              <div style={{display:'flex',gap:8,marginTop:8}}>
+                {weatherData[loc][langKey].quiz.options.map((opt, i) => (
+                  <button
+                    key={i}
+                    onClick={() =>
+                      alert(
+                        opt === weatherData[loc][langKey].quiz.answer
+                          ? "✅ Sahihi!"
+                          : "❌ Jaribu tena"
+                      )
+                    }
+                    className="btn btn-sm"
+                    style={{background:'rgba(59,130,246,0.12)'}}
+                  >
+                    {opt}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
-      )}
-    </div>
 
-    <Link to="/menu" className="text-green-600 underline">
-      {translations[language].back}
-    </Link>
-  </div>
-);
+        <div style={{display:'flex',justifyContent:'flex-end'}}>
+          <Link to="/menu" className="btn btn-ghost">{t.back}</Link>
+        </div>
+      </div>
+    </div>
+  );
 
 }

@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
+import { UI } from "../i18n";
 
 export default function Menu({ user }) {
   if (!user) {
     return (
-      <div className="p-6">
-        <h2 className="text-xl font-bold">📋 Main Menu</h2>
-        <p>Please set up your profile first.</p>
-        <Link to="/" className="text-green-600 underline">Go to Profile</Link>
+      <div className="card">
+        <h2 className="text-xl">📋 Menyu Kuu</h2>
+        <p>Tafadhali weka profaili yako kwanza.</p>
+        <Link to="/" className="nav-link">Nenda kwenye Profaili</Link>
       </div>
     );
   }
@@ -16,29 +17,38 @@ export default function Menu({ user }) {
   const greetings = {
     Kiswahili: `Karibu ${name || role} kutoka ${location}!`,
     Maa: `Supa ${name || role} oo ${location}!`,
-    English: `Welcome ${name || role} from ${location}!`,
   };
+
+  const greetingText = greetings[language] || greetings['Kiswahili'];
+  const ui = UI[language] || UI['Kiswahili'];
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
-      <h2 className="text-2xl font-bold mb-4">📋 Main Menu</h2>
-      <p className="mb-6 text-lg text-center">{greetings[language]}</p>
+      <div style={{maxWidth:520,width:'100%'}}>
+    <h2 className="text-2xl mb-4">📋 Menyu Kuu</h2>
+  <p className="mb-6 text-lg">{greetingText}</p>
 
-      <div className="flex flex-col gap-3 w-64">
-        <Link to="/farming" className="bg-green-600 text-white p-3 rounded text-center">
-          🌾 Farming Tips
-        </Link>
-        <Link to="/pastoralists" className="bg-green-600 text-white p-3 rounded text-center">
-          🐄 Pastoralist Tips
-        </Link>
-        <Link to="/weather" className="bg-green-600 text-white p-3 rounded text-center">
-          🌦️ Weather Updates
-        </Link>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:12}}>
+          <Link to="/farming" aria-label={`Fungua ${ui.farming}`} className="card nav-link" style={{display:'block',textAlign:'center'}}>
+            <div style={{fontSize:20}}>🌾</div>
+            <div style={{fontWeight:700}}>{ui.farming}</div>
+          </Link>
 
-        {/* New button for editing profile */}
-        <Link to="/" className="bg-gray-500 text-white p-3 rounded text-center mt-4">
-          ⚙️ Edit Profile
-        </Link>
+          <Link to="/pastoralists" aria-label={`Fungua ${ui.pastoralist}`} className="card nav-link" style={{display:'block',textAlign:'center'}}>
+            <div style={{fontSize:20}}>🐄</div>
+            <div style={{fontWeight:700}}>{ui.pastoralist}</div>
+          </Link>
+
+          <Link to="/weather" aria-label={`Fungua ${ui.weather}`} className="card nav-link" style={{display:'block',textAlign:'center'}}>
+            <div style={{fontSize:20}}>☁️</div>
+            <div style={{fontWeight:700}}>{ui.weather}</div>
+          </Link>
+
+          <Link to="/" aria-label={ui.profile} className="card nav-link" style={{display:'block',textAlign:'center'}}>
+            <div style={{fontSize:20}}>⚙️</div>
+            <div style={{fontWeight:700}}>{ui.profile}</div>
+          </Link>
+        </div>
       </div>
     </div>
   );
